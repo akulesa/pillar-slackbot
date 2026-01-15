@@ -32,6 +32,12 @@ class Config:
     @classmethod
     def validate(cls):
         """Validate that required config values are set."""
+        # Debug: print what we see
+        print(f"DEBUG: SLACK_BOT_TOKEN set: {bool(cls.SLACK_BOT_TOKEN)}")
+        print(f"DEBUG: SLACK_APP_TOKEN set: {bool(cls.SLACK_APP_TOKEN)}")
+        print(f"DEBUG: ANTHROPIC_API_KEY set: {bool(cls.ANTHROPIC_API_KEY)}")
+        print(f"DEBUG: All env vars: {[k for k in os.environ.keys() if 'SLACK' in k or 'ANTHROPIC' in k]}")
+
         required = [
             ("SLACK_BOT_TOKEN", cls.SLACK_BOT_TOKEN),
             ("SLACK_APP_TOKEN", cls.SLACK_APP_TOKEN),

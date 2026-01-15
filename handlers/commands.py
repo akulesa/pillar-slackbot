@@ -1,7 +1,14 @@
+import os
 from datetime import datetime, timedelta
 from slack_bolt import App
 
 from services import ClaudeService, GoogleService, AirtableService
+
+
+def get_oauth_redirect_uri():
+    """Get the OAuth redirect URI based on environment."""
+    base_url = os.environ.get("BASE_URL", "http://localhost:8080")
+    return f"{base_url}/oauth/callback"
 from utils import SlackUtils, MessageFormatter
 from database import (
     add_agenda_item, get_pending_agenda_items, mark_agenda_items_included,
@@ -207,7 +214,7 @@ def handle_agenda(respond, slack_utils: SlackUtils, claude: ClaudeService,
 
         # Check Google auth
         if not google.is_user_authenticated(user_id):
-            auth_url = google.get_auth_url(user_id, "http://localhost:8080/oauth/callback")
+            auth_url = google.get_auth_url(user_id, get_oauth_redirect_uri())
             respond(**MessageFormatter.format_google_auth_prompt(auth_url))
             return
 
@@ -341,7 +348,7 @@ def handle_lp_letter(respond, slack_utils: SlackUtils, claude: ClaudeService,
 
     # Check Google auth
     if not google.is_user_authenticated(user_id):
-        auth_url = google.get_auth_url(user_id, "http://localhost:8080/oauth/callback")
+        auth_url = google.get_auth_url(user_id, get_oauth_redirect_uri())
         respond(**MessageFormatter.format_google_auth_prompt(auth_url))
         return
 

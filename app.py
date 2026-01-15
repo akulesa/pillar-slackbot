@@ -34,6 +34,12 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+def get_oauth_redirect_uri():
+    """Get the OAuth redirect URI based on environment."""
+    base_url = os.environ.get("BASE_URL", "http://localhost:8080")
+    return f"{base_url}/oauth/callback"
+
+
 class OAuthCallbackHandler(BaseHTTPRequestHandler):
     """Handle Google OAuth callbacks."""
 
@@ -51,7 +57,7 @@ class OAuthCallbackHandler(BaseHTTPRequestHandler):
                 success = google_service.handle_oauth_callback(
                     user_id=state,
                     code=code,
-                    redirect_uri="http://localhost:8080/oauth/callback"
+                    redirect_uri=get_oauth_redirect_uri()
                 )
 
                 if success:
